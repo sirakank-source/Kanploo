@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#183d32"><link rel="manifest" href="manifest.json"><title>Kanploo Golf</title>
+<style>
+:root{--g:#183d32;--gold:#c9a84f;--bg:#f5f7f5;--line:#dfe7e2;--muted:#708078}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#18302a}
+.app{max-width:520px;margin:auto;min-height:100vh;padding-bottom:76px}header{background:var(--g);color:#fff;padding:22px 18px;border-radius:0 0 22px 22px}
+header small{opacity:.75}.brand{font-size:27px;font-weight:800;margin-top:4px}.tag{font-size:12px;opacity:.8}
+main{padding:15px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:11px}
+.label{font-size:12px;color:var(--muted)}.big{font-size:27px;font-weight:800}.up{color:#28734e}.down{color:#b25b45}
+h2{font-size:18px;margin:3px 0 13px}.btn{border:0;border-radius:12px;padding:13px;font-weight:700;font-size:15px;cursor:pointer}.primary{background:var(--g);color:#fff}.secondary{background:#edf2ef;color:var(--g)}.gold{background:#f4ead0;color:#604c18}
+.row{display:flex;gap:8px}.row .btn{flex:1}.field{margin-bottom:12px}select,input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:15px}
+.shotgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.shot{padding:15px 7px;border:1px solid var(--line);border-radius:12px;background:#fff;font-weight:700}.bad{background:#f8ece7}
+#counter{margin-top:13px;font-weight:800}.empty{color:var(--muted);font-size:14px;text-align:center;padding:17px 4px}.statline{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.hidden{display:none}.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);z-index:5}.navin{max-width:520px;margin:auto;display:flex}.nav button{flex:1;border:0;background:#fff;padding:10px 3px;font-size:11px;color:var(--muted)}.nav button.active{color:var(--g);font-weight:800}
+</style></head>
+<body><div class="app">
+<header><small>KANPLOO GOLF</small><div class="brand">Train with purpose.</div><div class="tag">Measure what matters · Lower the score</div></header>
+
+<main id="home">
+<div class="grid">
+<div class="card"><div class="label">Scoring Average</div><div class="big">78.9</div><div class="up">Sep 76.2 ↓</div></div>
+<div class="card"><div class="label">Best Score</div><div class="big">71</div><div>2 wins · 4 top 3</div></div>
+<div class="card"><div class="label">GIR</div><div class="big">58%</div><div class="down">Priority</div></div>
+<div class="card"><div class="label">Putts / Round</div><div class="big">32.3</div><div class="down">Priority</div></div>
+</div>
+<div class="card"><h2>Today's priorities</h2>
+<div class="statline"><span>Approach accuracy</span><b>GIR ≥ 65%</b></div>
+<div class="statline"><span>Putting</span><b>≤ 31 putts</b></div>
+<div class="statline"><span>Avoid big mistakes</span><b>Double+ ≤ 0.5</b></div></div>
+<div class="card"><h2>Start practice</h2><div class="row"><button class="btn primary" onclick="show('practice')">Driving Range</button><button class="btn secondary" onclick="show('round')">On Course</button></div></div>
+</main>
+
+<main id="practice" class="hidden"><div class="card"><h2>Driving Range · 10 Balls</h2>
+<div class="field"><label class="label">Club</label><select id="club"><option>PW</option><option>9i</option><option>8i</option><option>7i</option><option>6i</option><option>5i</option><option>4i</option><option>Hybrid</option><option>Driver</option><option>3W</option><option>5W</option></select></div>
+<div class="field"><label class="label">Target distance (yd)</label><input id="target" type="number" placeholder="e.g. 150"></div>
+<div class="label">Tap the result after each shot</div>
+<div class="shotgrid">
+<button class="shot" onclick="record('Hit Target')">✓ Hit Target</button><button class="shot bad" onclick="record('Short')">↓ Short</button>
+<button class="shot bad" onclick="record('Long')">↑ Long</button><button class="shot bad" onclick="record('Left')">← Left</button><button class="shot bad" onclick="record('Right')">→ Right</button>
+</div><div id="counter">0 / 10</div><div id="result" class="empty">Record 10 shots to see the result.</div>
+<button class="btn gold" style="width:100%" onclick="resetPractice()">New 10-ball test</button></div></main>
+
+<main id="stats" class="hidden"><div class="card"><h2>Performance Dashboard</h2>
+<div class="statline"><span>Fairway</span><b>78.6%</b></div><div class="statline"><span>GIR</span><b>58%</b></div><div class="statline"><span>Up & Down</span><b>45%</b></div>
+<div class="statline"><span>Putts</span><b>32.3</b></div><div class="statline"><span>Par 5</span><b>5.10</b></div><div class="statline"><span>Double+</span><b>1.0 / round</b></div></div>
+<div class="card"><h2>Practice history</h2><div id="history" class="empty">No sessions yet.</div></div></main>
+
+<main id="round" class="hidden"><div class="card"><h2>Quick Round Record</h2>
+<div class="field"><label class="label">Score</label><input id="score" type="number" placeholder="e.g. 74"></div>
+<div class="field"><label class="label">Putts</label><input id="putts" type="number" placeholder="e.g. 30"></div>
+<div class="field"><label class="label">GIR %</label><input id="gir" type="number" placeholder="e.g. 67"></div>
+<button class="btn primary" style="width:100%" onclick="saveRound()">Save Round</button><div id="roundmsg" class="empty"></div></div></main>
+
+<nav class="nav"><div class="navin"><button id="n-home" class="active" onclick="show('home')">⌂<br>Home</button><button id="n-practice" onclick="show('practice')">●<br>Practice</button><button id="n-stats" onclick="show('stats')">▥<br>Stats</button><button id="n-round" onclick="show('round')">□<br>Round</button></div></nav>
+</div>
+<script>
+let shots=[],history=JSON.parse(localStorage.getItem('kg_history')||'[]');
+function show(id){document.querySelectorAll('main').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));let n=document.getElementById('n-'+id);if(n)n.classList.add('active');renderHistory()}
+function record(x){if(shots.length>=10)return;shots.push(x);document.getElementById('counter').textContent=shots.length+' / 10';if(shots.length===10){let hit=shots.filter(s=>s==='Hit Target').length;let m={Short:0,Long:0,Left:0,Right:0};shots.filter(s=>s!=='Hit Target').forEach(s=>m[s]++);let top=Object.entries(m).sort((a,b)=>b[1]-a[1])[0];let text='Accuracy: '+hit+'/10 ('+(hit*10)+'%)';if(top[1])text+=' · Most common miss: '+top[0];document.getElementById('result').textContent=text;history.unshift({date:new Date().toLocaleDateString(),club:document.getElementById('club').value,hit});localStorage.setItem('kg_history',JSON.stringify(history));}}
+function resetPractice(){shots=[];document.getElementById('counter').textContent='0 / 10';document.getElementById('result').textContent='Record 10 shots to see the result.'}
+function renderHistory(){let e=document.getElementById('history');if(!e)return;if(!history.length){e.textContent='No sessions yet.';return}e.innerHTML=history.slice(0,8).map(h=>'<div class="statline"><span>'+h.date+' · '+h.club+'</span><b>'+h.hit+'/10</b></div>').join('')}
+function saveRound(){let s=document.getElementById('score').value,p=document.getElementById('putts').value,g=document.getElementById('gir').value;document.getElementById('roundmsg').textContent=s?'Saved. Good work — focus on the process.':'Please enter a score.';if(s){let r=JSON.parse(localStorage.getItem('kg_rounds')||'[]');r.unshift({date:new Date().toLocaleDateString(),score:s,putts:p,gir:g});localStorage.setItem('kg_rounds',JSON.stringify(r))}}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script></body></html>
